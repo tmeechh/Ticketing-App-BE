@@ -6,19 +6,42 @@ import { initializePayment, verifyPayment } from "./paystack.service.js";
 import ApiError from "../../utils/apiError.js";
 
 // 🔹 Buy a ticket
-export async function purchaseTicket({ eventId, userId }) {
+export async function purchaseTicket({ eventId, userId, ticketType }) {
   const event = await Event.findById(eventId);
   if (!event) throw ApiError.notFound(`Event with ID ${eventId} not found`);
-  if (event.ticketsAvailable <= 0) throw ApiError.badRequest(`Tickets for event '${event.name}' are sold out`);
 
-  const paymentData = await initializePayment(userId, event.price);
+  const validTypes = ["General", "VIP", "Premium", "Free"];
+  if (!validTypes.includes(ticketType)) {
+    throw ApiError.badRequest("Invalid ticket type selected");
+  }
 
+  const price = event.ticketPrices.get(ticketType);
+  if (!price) throw ApiError.badRequest(`Price not set for ticket type ${ticketType}`);
+
+  const available = event.ticketsAvailable.get(ticketType);
+  if (!available || available <= 0) {
+    throw ApiError.badRequest(`${ticketType} tickets are sold out`);
+  }
+
+  // Initialize payment
+  const paymentData = await initializePayment(userId, price);
+
+  // Create the ticket
   const ticket = await Ticket.create({
     event: eventId,
     user: userId,
-    price: event.price,
+    ticketType,
+    price,
     paymentReference: paymentData.reference,
+    history: [
+      { action: "created", note: "Ticket purchase initiated" }
+    ],
   });
+  
+
+  // Reduce ticket count and save
+  event.ticketsAvailable.set(ticketType, available - 1);
+  await event.save();
 
   return {
     status: 201,
@@ -28,6 +51,8 @@ export async function purchaseTicket({ eventId, userId }) {
     ticket,
   };
 }
+
+
 
 // 🔹 Confirm payment success
 export async function confirmTicketPayment(reference) {
@@ -42,7 +67,13 @@ export async function confirmTicketPayment(reference) {
     { new: true }
   );
 
-
+  ticket.status = "paid";
+  ticket.history.push({
+    action: "paid",
+    note: "Payment verified",
+  });
+  await ticket.save();
+  
   const event = await Event.findById(ticket.event);
   if (event.ticketsAvailable > 0) {
     event.ticketsAvailable -= 1;
@@ -69,8 +100,44 @@ export async function getUserTickets(userId) {
   };
 }
 
+
+export async function refundTicket(ticketId, userId) {
+  const ticket = await Ticket.findOne({ _id: ticketId, user: userId }).populate('event');
+  if (!ticket) throw ApiError.notFound("Ticket not found");
+
+  const daysBeforeEvent = (new Date(ticket.event.date) - new Date()) / (1000 * 60 * 60 * 24);
+  if (daysBeforeEvent < 14) throw ApiError.badRequest("Refunds are not allowed within 14 days of the event");
+
+  if (ticket.status !== "paid") throw ApiError.badRequest("Only paid tickets can be refunded");
+
+  ticket.status = "cancelled";
+  ticket.history.push({
+    action: "refunded",
+    note: "Refund issued successfully",
+  });
+  
+  await ticket.save();
+
+  // Restore ticket availability by type
+  const event = ticket.event;
+  const currentAvailable = event.ticketsAvailable.get(ticket.ticketType) || 0;
+  event.ticketsAvailable.set(ticket.ticketType, currentAvailable + 1);
+  await event.save();
+
+  return {
+    status: 200,
+    success: true,
+    message: "Refund processed successfully",
+    ticket,
+  };
+}
+
 export default {
   purchaseTicket,
   confirmTicketPayment,
   getUserTickets,
+  refundTicket,
 };
+
+
+

@@ -32,16 +32,22 @@ export async function register(userData = {}) {
   const { password } = userData;
   const hashedPassword = await hashPassword(password);
 
-  const user = await User.create({ ...userData, password: hashedPassword });
+  const roles = userData.roles ?? ["user"];
+const user = await User.create({
+  ...userData,
+  roles,
+  password: hashedPassword,
+});
 
-  // const token = generateToken(
-  //   {
-  //     email: user.email,
-  //     userId: user._id,
-  //     roles: user.roles,
-  //   },
-  //   "1h"
-  // );
+
+  const token = generateToken(
+    {
+      email: user.email,
+      userId: user._id,
+      roles: user.roles,
+    },
+    "1h"
+  );
 
   const token = generateToken(user._id.toString());
 
@@ -73,11 +79,11 @@ export async function login(userData = {}) {
     throw ApiError.forbidden("Email Not Verified");
   }
 
-  // const token = generateToken({
-  //   userId: user._id,
-  //   user: user._id,
-  //   roles: user.roles,
-  // });
+  const token = generateToken({
+    userId: user._id,
+    user: user._id,
+    roles: user.roles,
+  });
 
   const token = generateToken(user._id.toString());
 

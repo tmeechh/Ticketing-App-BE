@@ -3,18 +3,6 @@ import { uploadToCloudinary } from "./upload.service.js";
 import ApiError from "../../utils/apiError.js";
 import ApiSuccess from "../../utils/apiSuccess.js";
 
-/**
- * Create a new event (with image upload)
- */
-// export async function createEvent(eventData, file) {
-//   if (file) {
-//     const imageUrl = await uploadToCloudinary(file.path);
-//     eventData.image = imageUrl;  // Save Cloudinary URL
-//   }
-
-//   const event = await Event.create(eventData);
-//   return ApiSuccess.created("Event created successfully", { event });
-// }
 
 export async function createEvent(eventData, file) {
   if (file) {
@@ -37,14 +25,21 @@ export async function createEvent(eventData, file) {
  * Get all events with optional filtering
  */
 export async function getEvents(filter = {}) {
-  const events = await Event.find(filter);
-  return { 
-    statusCode: 201, 
+  const query = {};
+
+  if (filter.category) {
+    query.category = filter.category;
+  }
+
+  const events = await Event.find(query);
+  return {
+    statusCode: 200,
     success: true,
-    message: "Event retrieved successfully",
+    message: "Events retrieved successfully",
     events,
   };
 }
+
 
 /**
  * Get a single event by ID

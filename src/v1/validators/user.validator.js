@@ -33,23 +33,23 @@ export const userValidator = [
   //   .isString()
   //   .withMessage("Phone Number must be a string"),
 
-  // body("roles")
-  //   .exists()
-  //   .withMessage("roles is required")
-  //   .isArray()
-  //   .withMessage("Roles must be an array of strings")
-  //   .custom((value) => {
-  //     const validRoles = ["user", "admin"];
-  //     if (value.length > 1) {
-  //       throw ApiError.unprocessableEntity("User can only have one role");
-  //     }
-  //     value.forEach((role) => {
-  //       if (!validRoles.includes(role)) {
-  //         throw ApiError.unprocessableEntity("Invalid Role");
-  //       }
-  //     });
-  //     return true;
-  //   }),
+  body("roles")
+    .exists()
+    .withMessage("roles is required")
+    .isArray()
+    .withMessage("Roles must be an array of strings")
+    .custom((value) => {
+      const validRoles = ["user", "admin", "organizer"];
+      if (value.length > 1) {
+        throw ApiError.unprocessableEntity("User can only have one role");
+      }
+      value.forEach((role) => {
+        if (!validRoles.includes(role)) {
+          throw ApiError.unprocessableEntity("Invalid Role");
+        }
+      });
+      return true;
+    }),
 
   handleValidationErrors,
 ];

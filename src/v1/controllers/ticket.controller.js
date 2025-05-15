@@ -15,3 +15,8 @@ export const getUserTickets = asyncWrapper(async (req, res) => {
   const response = await ticketService.getUserTickets(req.user._id);
   res.status(response.status).json(response);
 });
+
+export const refundTicket = asyncWrapper(async (req, res) => {
+  const response = await ticketService.refundTicket(req.params.ticketId, req.user._id);
+  res.status(response.status).json(response);
+});
