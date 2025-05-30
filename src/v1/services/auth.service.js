@@ -46,10 +46,10 @@ const user = await User.create({
       userId: user._id,
       roles: user.roles,
     },
-    "1h"
+    "7d"
   );
 
-  const token = generateToken(user._id.toString());
+  // const token = generateToken(user._id.toString());
 
 
   try {
@@ -85,7 +85,7 @@ export async function login(userData = {}) {
     roles: user.roles,
   });
 
-  const token = generateToken(user._id.toString());
+  // const token = generateToken(user._id.toString());
 
 
   user.password = undefined;

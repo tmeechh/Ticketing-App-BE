@@ -6,6 +6,7 @@ const EventSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String, required: true },
+    fullDescription: { type: String, required: true },
     category: {
       type: String,
       required: true,
@@ -19,20 +20,22 @@ const EventSchema = new Schema(
       ],
     },
     date: { type: Date, required: true },
+    time: { type: String, required: true },
     location: { type: String, required: true },
-    organizer: {
+    organizer: { type: String, required: true },
+    organizerId: {      // reference
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
+      ref: 'User'
     },
-    image: { type: String, default: '' },
+    images: [String],
+
     ticketPrices: {
       type: Map,
       of: Number,
       required: true,
       validate: {
         validator: function (v) {
-          return v.has('General') && v.has('VIP') && v.has('Premium');
+          return v.has('general') && v.has('vip') && v.has('premium');
         },
         message: 'Ticket prices must include General, VIP, and Premium',
       },
@@ -43,7 +46,7 @@ const EventSchema = new Schema(
       required: true,
       validate: {
         validator: function (v) {
-          return v.has('General') && v.has('VIP') && v.has('Premium');
+          return v.has('general') && v.has('vip') && v.has('premium');
         },
         message: 'Tickets available must include General, VIP, and Premium',
       },

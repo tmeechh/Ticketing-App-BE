@@ -22,7 +22,13 @@ const port = process.env.PORT || 8080;
 app.use(express.json());  
 app.use(express.urlencoded({ extended: true })); 
 
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // ✅ Must match your frontend origin
+    credentials: true, // ✅ Required for cookies/auth headers
+  })
+);
+
 // app.use(
 //   fileUpload({
 //     useTempFiles: true,

@@ -3,7 +3,7 @@ import ApiError from "../utils/apiError.js";
 
 export const generateToken = (userId) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME || "1d",
+    expiresIn: process.env.JWT_LIFETIME || "7d",
   });
   return token;
 };

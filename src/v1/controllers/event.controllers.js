@@ -7,7 +7,7 @@ export async function createEvent(req, res, next) {
   try {
     console.log("Uploaded file:", req.file);  
 
-    const response = await eventService.createEvent(req.body, req.file); 
+    const response = await eventService.createEvent(req.body, req.files); 
 
     console.log("Response:", response);  
     res.status(response.statusCode).json(response);
@@ -17,7 +17,7 @@ export async function createEvent(req, res, next) {
 }
 
 /**
- * Controller for retrieving events
+ * Controller for retrieving events 
  */
 export async function getEvents(req, res, next) {
   try {
@@ -33,8 +33,8 @@ export async function getEvents(req, res, next) {
  */
 export async function getEventById(req, res, next) {
   try {
-    const response = await eventService.getEventById(req.params.id);
-    res.status(response.statusCode).json(response);
+    const event = await eventService.getEventById(req.params.id);
+    res.status(event.statusCode).json(event);
   } catch (error) {
     next(error);
   }
@@ -45,7 +45,7 @@ export async function getEventById(req, res, next) {
  */
 export async function updateEvent(req, res, next) {
   try {
-    const response = await eventService.updateEvent(req.params.id, req.body, req.file); // Pass file
+    const response = await eventService.updateEvent(req.params.id, req.body, req.files); // Pass file
     res.status(response.statusCode).json(response);
   } catch (error) {
     next(error);
@@ -64,10 +64,24 @@ export async function deleteEvent(req, res, next) {
   }
 }
 
+/**
+ * Controller for retrieving events by organizer
+ */
+export async function getOrganizerEvents(req, res, next) {
+  try {
+    const response = await eventService.getOrganizerEvents(req.params.organizerId);
+    res.status(response.statusCode).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+
 export default {
   createEvent,
   getEvents,
   getEventById,
   updateEvent,
-  deleteEvent
+  deleteEvent,
+  getOrganizerEvents
 };

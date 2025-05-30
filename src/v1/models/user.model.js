@@ -4,14 +4,14 @@ const { Schema } = mongoose;
 
 const UserSchema = new Schema(
   {
-    firstName: {
+    fullName: {
       type: String,
       required: [true, "Please provide a firstName"],
     },
-    lastName: {
-      type: String,
-      required: [true, "Please provide a firstName"],
-    },
+    // lastName: {
+    //   type: String,
+    //   required: [true, "Please provide a firstName"],
+    // },
     email: {
       type: String,
       required: [true, "Please provide an email"],
