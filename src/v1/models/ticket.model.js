@@ -19,7 +19,7 @@ const TicketSchema = new Schema(
     paymentReference: { type: String },
     ticketType: {
       type: String,
-      enum: ['General', 'VIP', 'Premium', 'Free'],
+      enum: ['general', 'vip', 'premium', 'free'],
       required: true,
     },
     history: [

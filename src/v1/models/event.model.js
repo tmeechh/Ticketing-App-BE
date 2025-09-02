@@ -22,6 +22,7 @@ const EventSchema = new Schema(
     date: { type: Date, required: true },
     time: { type: String, required: true },
     location: { type: String, required: true },
+    address: { type: String, required: true },
     organizer: { type: String, required: true },
     organizerId: {      // reference
       type: mongoose.Schema.Types.ObjectId,

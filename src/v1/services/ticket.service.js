@@ -6,32 +6,45 @@ import { initializePayment, verifyPayment } from "./paystack.service.js";
 import ApiError from "../../utils/apiError.js";
 
 // 🔹 Buy a ticket
-export async function purchaseTicket({ eventId, userId, ticketType }) {
+export async function purchaseTicket({ eventId, userId, ticketType, price, quantity }) {
+  
+  ticketType = ticketType?.toLowerCase().trim();
+  quantity = quantity || 1;
   const event = await Event.findById(eventId);
   if (!event) throw ApiError.notFound(`Event with ID ${eventId} not found`);
 
-  const validTypes = ["General", "VIP", "Premium", "Free"];
+  const validTypes = ["general", "vip", "premium", "free"];
   if (!validTypes.includes(ticketType)) {
     throw ApiError.badRequest("Invalid ticket type selected");
   }
 
-  const price = event.ticketPrices.get(ticketType);
-  if (!price) throw ApiError.badRequest(`Price not set for ticket type ${ticketType}`);
+   const basePrice = event.ticketPrices.get(ticketType);
+  if (!basePrice) {
+    throw ApiError.badRequest(`Price not set for ticket type ${ticketType}`);
+  }
+
+  
+  const serviceCharge = Math.round(basePrice * 0.05); // 5% fee
+  const totalPrice = (basePrice + serviceCharge) * quantity;
+
 
   const available = event.ticketsAvailable.get(ticketType);
   if (!available || available <= 0) {
     throw ApiError.badRequest(`${ticketType} tickets are sold out`);
   }
 
+
   // Initialize payment
-  const paymentData = await initializePayment(userId, price);
+  const paymentData = await initializePayment(userId, totalPrice);
 
   // Create the ticket
   const ticket = await Ticket.create({
     event: eventId,
     user: userId,
     ticketType,
-    price,
+    price: basePrice,
+    serviceCharge,
+    totalPaid: totalPrice,
     paymentReference: paymentData.reference,
     history: [
       { action: "created", note: "Ticket purchase initiated" }
@@ -40,7 +53,7 @@ export async function purchaseTicket({ eventId, userId, ticketType }) {
   
 
   // Reduce ticket count and save
-  event.ticketsAvailable.set(ticketType, available - 1);
+  event.ticketsAvailable.set(ticketType, available - quantity);
   await event.save();
 
   return {
