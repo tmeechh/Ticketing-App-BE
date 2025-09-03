@@ -46,6 +46,7 @@ export async function purchaseTicket({ eventId, userId, ticketType, price, quant
     serviceCharge,
     totalPaid: totalPrice,
     paymentReference: paymentData.reference,
+    quantity, 
     history: [
       { action: "created", note: "Ticket purchase initiated" }
     ],

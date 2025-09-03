@@ -22,6 +22,7 @@ const TicketSchema = new Schema(
       enum: ['general', 'vip', 'premium', 'free'],
       required: true,
     },
+    quantity: { type: Number, default: 1 },
     history: [
       {
         action: {
