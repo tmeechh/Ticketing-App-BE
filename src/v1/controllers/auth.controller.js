@@ -43,4 +43,14 @@ export const resetPassword = asyncWrapper(async (req, res, next) => {
   res.status(200).json(result);
 });
 
+export const updateProfile = asyncWrapper(async (req, res) => {
+  const userId = req.user._id;
+  const result = await authService.updateProfile(userId, req);
+  res.status(200).json(result);
+});
+
+
+
+
+
 // export default { register, login, getUser };

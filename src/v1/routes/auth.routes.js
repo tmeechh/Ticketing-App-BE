@@ -8,16 +8,18 @@ import {
   resetPassword,
   sendOTP,
   verifyOTP,
+   updateProfile, 
 } from "../controllers/auth.controller.js";
 import { isAuth } from "../../middlewares/auth.js";
 import { userValidator } from "../validators/user.validator.js";
+import { uploadProfileImage } from "../../middlewares/upload.middleware.js";
 
 const router = express.Router();
 
 router
   .route("/")
   .get(isAuth, getUser)
-  //   .patch(auth, updateUser)
+  .patch(isAuth, uploadProfileImage, updateProfile)
   //   .delete(auth, deleteUser)
   .all(methodNotAllowed);
 router.route("/signup").post(userValidator, register).all(methodNotAllowed);
@@ -26,5 +28,6 @@ router.route("/send-otp").post(sendOTP).all(methodNotAllowed);
 router.route("/verify-otp").post(verifyOTP).all(methodNotAllowed);
 router.route("/forgot-password").post(forgotPassword).all(methodNotAllowed);
 router.route("/reset-password").post(resetPassword).all(methodNotAllowed);
+
 
 export default router;

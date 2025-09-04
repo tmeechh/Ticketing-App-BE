@@ -4,4 +4,6 @@ import multer from "multer";
 const upload = multer({ dest: "uploads/" });
 
 // Middleware to handle single image upload
-export const uploadImage = upload.array("images", 5);
+export const uploadEventImages = upload.array("images", 5);
+
+export const uploadProfileImage = upload.single("image");
