@@ -10,7 +10,9 @@ export const uploadBufferToCloudinary = (fileBuffer, folder) => {
     const stream = cloudinary.v2.uploader.upload_stream(
       { folder },
       (error, result) => {
-        if (error) reject(new ApiError(500, "Cloudinary upload failed"));
+// if (error) reject(new ApiError(500, "Cloudinary upload failed"));
+        if (error) reject(new ApiError(500, error.message || "Cloudinary upload failed"));
+
         else resolve(result.secure_url);
       }
     );
