@@ -18,15 +18,15 @@ import webhookRoutesV1 from './src/v1/routes/webhook.routes.js';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 8080;
+// const port = process.env.PORT || 8080;
 
 app.use(express.json());  
 app.use(express.urlencoded({ extended: true })); 
 
 app.use(
   cors({
-    origin: 'http://localhost:5173', // ✅ Must match your frontend origin
-    credentials: true, // ✅ Required for cookies/auth headers
+     origin: process.env.CLIENT_URL,
+    credentials: true, //
   })
 );
 
@@ -46,17 +46,21 @@ app.use('/api/v1/webhook', webhookRoutesV1);
 app.use(notFound);
 app.use(errorMiddleware);
 
-const startServer = async () => {
-  try {
-    await connectDB(process.env.DB_URI);
-    console.log(`DB Connected!`);
-    app.listen(port, () => console.log(`Server is listening on PORT:${port}`));
-  } catch (error) {
-    console.log(`Couldn't connect because of ${error.message}`);
-    process.exit(1);
-  }
-};
+connectDB(process.env.DB_URI).then(() => {
+  console.log(`DB Connected!`);  
+})
 
-startServer();
+ // const startServer = async () => {
+// //   try {
+// //     await connectDB(process.env.DB_URI);
+// //     console.log(`DB Connected!`);
+// //     app.listen(port, () => console.log(`Server is listening on PORT:${port}`));
+// //   } catch (error) {
+// //     console.log(`Couldn't connect because of ${error.message}`);
+// //     process.exit(1);
+// //   }
+// // };
+
+// startServer();
 
 export default app;  
