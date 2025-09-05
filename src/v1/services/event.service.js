@@ -1,22 +1,31 @@
 import Event from "../models/event.model.js";
-import { uploadToCloudinary } from "./upload.service.js";
+import {  uploadBufferToCloudinary } from "./upload.service.js";
 import ApiError from "../../utils/apiError.js";
 import ApiSuccess from "../../utils/apiSuccess.js";
 import fs from "fs/promises";
 
 
+
 export async function createEvent(eventData, files) {
   if (files && files.length > 0) {
     const imageUrls = [];
-
     for (const file of files) {
-      const url = await uploadToCloudinary(file.path);
+      const url = await uploadBufferToCloudinary(file.buffer, "Meech Ticketing");
       imageUrls.push(url);
-      await fs.unlink(file.path); // delete temp file
     }
-
-    eventData.images = imageUrls; // save array of URLs
+    eventData.images = imageUrls;
   }
+  // if (files && files.length > 0) {
+  //   const imageUrls = [];
+
+  //   for (const file of files) {
+  //     const url = await uploadToCloudinary(file.path);
+  //     imageUrls.push(url);
+  //     await fs.unlink(file.path); // delete temp file
+  //   }
+
+  //   eventData.images = imageUrls; // save array of URLs
+  // }
      // Convert ticket data to proper Map format
      const convertToMap = (data) => {
       if (typeof data === 'string') data = JSON.parse(data); 
@@ -42,12 +51,21 @@ export async function createEvent(eventData, files) {
   };
 }
 export async function updateEvent(eventId, updateData, files) {
+  // if (files && files.length > 0) {
+  //   const imageUrls = [];
+  //   for (const file of files) {
+  //     const url = await uploadToCloudinary(file.path);
+  //     imageUrls.push(url);
+  //     await fs.unlink(file.path);
+  //   }
+  //   updateData.images = imageUrls;
+  // }
+
   if (files && files.length > 0) {
     const imageUrls = [];
     for (const file of files) {
-      const url = await uploadToCloudinary(file.path);
+      const url = await uploadBufferToCloudinary(file.buffer, "Meech Ticketing");
       imageUrls.push(url);
-      await fs.unlink(file.path);
     }
     updateData.images = imageUrls;
   }

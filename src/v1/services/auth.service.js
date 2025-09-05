@@ -8,6 +8,7 @@ import ApiSuccess from '../../utils/apiSuccess.js';
 import emailService from './email.service.js';
 import cloudinary from '../../config/cloudinary.js';
 import fs from 'fs';
+import { uploadBufferToCloudinary } from "./upload.service.js";
 
 export async function findUserByEmail(email) {
   const user = await User.findOne({ email }).select('+password');
@@ -160,24 +161,35 @@ export async function updateProfile({ userId, req }) {
     user.fullName = req.body.fullName.trim();
   }
 
- 
- if (req.file) {
+  if (req.file) {
     try {
-      const uploadResult = await cloudinary.uploader.upload(req.file.path, {
-        folder: "EventHorizon/users",
-        public_id: `${userId}_profile_${Date.now()}`,
-        overwrite: true,
-        resource_type: "image",
-      });
-
-      user.image = uploadResult.secure_url;
-
-      // Clean up temp file
-      fs.unlinkSync(req.file.path);
+      const imageUrl = await uploadBufferToCloudinary(
+        req.file.buffer,
+        "EventHorizon/users"
+      );
+      user.image = imageUrl;
     } catch (err) {
-      throw ApiError.badRequest('Image upload failed');
+      throw ApiError.badRequest("Image upload failed");
     }
   }
+ 
+//  if (req.file) {
+//     try {
+//       const uploadResult = await cloudinary.uploader.upload(req.file.path, {
+//         folder: "EventHorizon/users",
+//         public_id: `${userId}_profile_${Date.now()}`,
+//         overwrite: true,
+//         resource_type: "image",
+//       });
+
+//       user.image = uploadResult.secure_url;
+
+//       // Clean up temp file
+//       fs.unlinkSync(req.file.path);
+//     } catch (err) {
+//       throw ApiError.badRequest('Image upload failed');
+//     }
+//   }
 
   await user.save();
   user.password = undefined; // never return password
