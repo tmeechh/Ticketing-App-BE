@@ -74,7 +74,7 @@ const initializePayment = (email, amount, reference) => {
     email,
     amount: amount * 100,
     reference,
-    currency: "USD",
+    
   });
 };
 
