@@ -151,7 +151,7 @@ export async function resetPassword({ email, otp, password }) {
   return ApiSuccess.ok('Password Updated');
 }
 
-export async function updateProfile(userId, req) {
+export async function updateProfile({ userId, req }) {
   const user = await User.findById(userId);
   if (!user) throw ApiError.notFound('User not found');
 
