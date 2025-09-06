@@ -1,226 +1,171 @@
-# Express Boilerplate with Authentication
+# 🎟️ EventHorizon Backend
 
-This is a basic Express boilerplate with authentication using JWT. It is designed to kickstart your application with minimal setup, providing essential features such as user registration, login, password reset, and email verification.
+EventHorizon is a **ticketing and event management platform**.  
+The backend is built with **Express.js** and provides APIs for authentication, event creation, ticket sales, payments, and refunds.  
 
-## Features
+It powers the frontend (React + Vite) and handles all core business logic securely and efficiently.
 
-- **User Registration**: Register new users and store their information securely in MongoDB.
-- **User Login**: Authenticate users via email and password.
-- **JWT Authentication**: Secure routes with JSON Web Tokens (JWT).
-- **Forgot Password**: Send password reset links via email.
-- **Email Verification**: Verify user accounts through an OTP sent to their email.
-- **Cloudinary Integration**: Handle user profile image uploads with Cloudinary.
-- **Brevo Email Integration**: Use Brevo (formerly Sendinblue) for sending emails.
+---
 
-## Technologies Used
+## ✨ Features
 
-- **Node.js**: JavaScript runtime for server-side logic.
-- **Express.js**: Fast and minimalist web framework for Node.js.
-- **MongoDB**: NoSQL database to store user data.
-- **Mongoose**: Object Data Modeling (ODM) library for MongoDB.
-- **JWT**: JSON Web Tokens for securing API endpoints.
-- **Cloudinary**: Image and video management platform.
-- **Brevo (Sendinblue)**: Email service for transactional and marketing emails.
+- 👤 **User & Organizer Accounts**
+  - User registration with email + password
+  - Role-based access (User / Organizer)
+  - OTP verification for security
 
-## Prerequisites
+- 🔐 **Authentication**
+  - JWT-based login & protected routes
+  - Password reset with OTP
 
-- **Node.js** (version 12 or higher)
-- **MongoDB** (either installed locally or use MongoDB Atlas for cloud DB)
-- **Cloudinary Account** (for managing file uploads)
-- **Brevo Account** (for email services)
+- 🎟️ **Event Management**
+  - Organizers can create, update, and manage events
+  - Tickets with types (General, VIP, Premium)
+  - Refund system (no refunds within 14 days of an event)
 
-## Getting Started
+- 💳 **Payments**
+  - Paystack integration (test mode ready)
+  - Payment verification
+  - Support for ticket purchase transactions
 
-### Installation
+- ☁️ **Media Handling**
+  - Multer for file uploads
+  - Cloudinary for image storage (event banners, profile images)
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-username/express-boilerplate.git
-    ```
+- 📧 **Email & Notifications**
+  - Nodemailer for sending OTPs
+  - Handlebars templates for email content
 
-2. Navigate into the project directory:
-    ```bash
-    cd express-boilerplate
-    ```
+- 🕒 **Automations**
+  - Node-cron for scheduled tasks (reminders, cleanups, etc.)
 
-3. Install the dependencies:
-    ```bash
-    npm install
-    ```
+---
 
-4. Create a `.env` file in the root directory and configure the following environment variables.
+## 🛠 Tech Stack
 
-### Environment Variables
+- **Server**: [Node.js](https://nodejs.org/) + [Express.js](https://expressjs.com/)  
+- **Database**: [MongoDB](https://www.mongodb.com/) with [Mongoose](https://mongoosejs.com/)  
+- **Authentication**: [JWT](https://jwt.io/) + [bcrypt](https://www.npmjs.com/package/bcrypt)  
+- **File Uploads**: [Multer](https://github.com/expressjs/multer) + [Cloudinary](https://cloudinary.com/)  
+- **Payments**: [Paystack](https://paystack.com/) API  
+- **Email Service**: [Nodemailer](https://nodemailer.com/) + Handlebars templates  
+- **Scheduling**: [Node-cron](https://github.com/node-cron/node-cron)  
 
-Create a `.env` file in the root of your project and add the following configuration:
+---
 
-| **Variable**                | **Description**                                         | **Example**                                      |
-|-----------------------------|---------------------------------------------------------|--------------------------------------------------|
-| `NODE_ENV`                   | Defines the environment mode (development or production) | `development`                                   |
-| `JWT_SECRET`                 | Secret key used to sign JWT tokens                      | `your_jwt_secret`                               |
-| `JWT_LIFETIME`               | Duration for which the JWT is valid                     | `7d`                                            |
-| `DB_URI`                     | MongoDB URI for the database connection                  | `mongodb://localhost:27017/your-database-name`  |
-| `BREVO_EMAIL`                | Email address used with Brevo for sending notifications | `your_email@example.com`                       |
-| `BREVO_PASSWORD`             | Password for the Brevo email account                     | `your_brevo_password`                          |
-| `CLOUDINARY_NAME`            | Cloudinary account name                                  | `your_cloudinary_name`                         |
-| `CLOUDINARY_API_KEY`         | API key for accessing Cloudinary services                | `your_cloudinary_api_key`                       |
-| `CLOUDINARY_API_SECRET`      | Secret key for Cloudinary API                            | `your_cloudinary_api_secret`                   |
+## 📂 Project Structure
 
-### Running the App
+## 📂 Project Structure
 
-To run the application in development mode:
+```bash
+.
+├── .vercel/              # Vercel deployment files
+├── api/                  # Vercel serverless functions
+├── node_modules/         # Dependencies
+├── src/
+│   ├── config/           # DB, Cloudinary, Paystack, etc.
+│   ├── lib/              # Reusable libraries
+│   ├── middlewares/      # Custom Express middlewares
+│   ├── templates/        # Email templates (handlebars)
+│   ├── utils/            # Helpers (email, token, error handling, etc.)
+│   └── v1/
+│       ├── controllers/  # Business logic for routes
+│       ├── models/       # Mongoose schemas (User, Event, Ticket, etc.)
+│       ├── routes/       # Express routes
+│       ├── services/     # Service layer (auth, payment, etc.)
+│       ├── tests/        # Unit/integration tests
+│       └── validators/   # Request validation schemas
+├── uploads/              # Uploaded files (temp storage before Cloudinary)
+├── .env                  # Environment variables
+├── .gitignore            # Git ignore rules
+├── app.js                # Main Express app
+├── babel.config.cjs      # Babel config
+├── migration.js          # Database migrations/seeding
+├── package.json          # Dependencies & scripts
+├── package-lock.json     # Dependency lock file
+├── README.md             # Documentation
+├── test-db.js            # DB connection test script
+└── vercel.json           # Vercel deployment config
+          # Documentation
 
+```
+
+## ⚙️ Installation & Setup
+
+### 🔽 Clone the repository
+```bash
+git clone https://github.com/tmeechh/Ticketing-App-BE.git
+```
+
+### 📦 Install dependencies
+```bash
+npm install
+```
+
+
+## ⚙️ Environment Variables
+
+Create a `.env` file in the root of your project and add the following variables:
+
+| **Variable**             | **Description**                                          | **Example**                           |
+|---------------------------|----------------------------------------------------------|---------------------------------------|
+| `NODE_ENV`                | Environment mode (`development` or `production`)         | `development`                         |
+| `JWT_SECRET`              | Secret key for signing JWT tokens                        | `supersecretkey`                      |
+| `JWT_LIFETIME`            | Duration for JWT validity                                | `7d`                                  |
+| `DB_URI`                  | MongoDB connection string                                | `mongodb://localhost:27017/event-db`  |
+| `MAIL_HOST`               | SMTP host for sending emails                             | `smtp.gmail.com`                      |
+| `MAIL_PORT`               | SMTP port (usually 465 for SSL or 587 for TLS)           | `465`                                 |
+| `MAIL_SECURE`             | Whether to use SSL/TLS (`true` or `false`)               | `true`                                |
+| `MAIL_FROM`               | Default sender email address                             | `noreply@eventhorizon.com`            |
+| `BREVO_EMAIL`             | Brevo (Sendinblue) email account                         | `you@example.com`                     |
+| `BREVO_PASSWORD`          | Brevo (Sendinblue) account password or API key           | `your-brevo-password`                 |
+| `CLOUDINARY_NAME`         | Cloudinary account name                                  | `your-cloud-name`                     |
+| `CLOUDINARY_API_KEY`      | Cloudinary API key                                       | `1234567890abcdef`                    |
+| `CLOUDINARY_API_SECRET`   | Cloudinary API secret                                    | `abcdef1234567890`                    |
+| `PAYSTACK_SECRET_KEY`     | Paystack secret key for payments                         | `sk_test_xxxxxxxxxxxxxx`              |
+| `PAYSTACK_PUBLIC_KEY`     | Paystack public key for frontend transactions            | `pk_test_xxxxxxxxxxxxxx`              |
+
+
+
+### 🛠 Run in Development
 ```bash
 npm run dev
 ```
 
-The server will start at `http://localhost:3000` or the port specified in your `.env` file.
 
-### Testing the App
+- Server will start locally at:
+👉 http://localhost:5000/api/v1
 
-You can test the API using Postman or any other API client. Below are the available endpoints with example request bodies.
+👉 In production (deployment), the base URL will depend on your hosting provider (e.g., Vercel or Render).
 
-## API Endpoints
 
-### 1. Register User
 
-- **Endpoint**: `POST /api/v1/auth/register`
-- **Description**: Register a new user.
-- **Request Body**:
-    ```json
-    {
-      "email": "user@example.com",
-      "password": "Password123!",
-      "firstName": "John",
-      "phoneNumber": "08012345678"
-    }
-    ```
-- **Response**:
-    ```json
-    {
-      "success": true,
-      "status_code": 201,
-      "message": "Registration Successful, OTP has been sent to user@example.com",
-      "data": {
-        "email": "user@example.com",
-        "id": "user_id"
-      }
-    }
-    ```
 
-### 2. Login User
 
-- **Endpoint**: `POST /api/v1/auth/login`
-- **Description**: Login a user.
-- **Request Body**:
-    ```json
-    {
-      "email": "user@example.com",
-      "password": "Password123!"
-    }
-    ```
-- **Response**:
-    ```json
-    {
-      "success": true,
-      "status_code": 200,
-      "message": "Login Successful",
-      "data": {
-        "user": {
-          "email": "user@example.com",
-          "id": "user_id"
-        },
-        "token": "jwt_token"
-      }
-    }
-    ```
+## 🚀 Deployment
 
-### 3. Forgot Password
+This backend is deployable on:
 
-- **Endpoint**: `POST /api/v1/auth/forgot-password`
-- **Description**: Trigger forgot password email.
-- **Request Body**:
-    ```json
-    {
-      "email": "user@example.com"
-    }
-    ```
-- **Response**:
-    ```json
-    {
-      "success": true,
-      "status_code": 200,
-      "message": "Password reset link sent to user@example.com"
-    }
-    ```
+- Vercel (serverless) with serverless-http
 
-### 4. Reset Password
+- Render / Railway / Heroku for full Express hosting
 
-- **Endpoint**: `POST /api/v1/auth/reset-password`
-- **Description**: Reset user password.
-- **Request Body**:
-    ```json
-    {
-      "email": "user@example.com",
-      "otp": "123456",
-      "password": "NewPassword123!"
-    }
-    ```
-- **Response**:
-    ```json
-    {
-      "success": true,
-      "status_code": 200,
-      "message": "Password has been reset successfully"
-    }
-    ```
+- MongoDB Atlas for cloud DB
 
-### 5. Verify OTP
+## 👨‍💻 Contributing
 
-- **Endpoint**: `POST /api/v1/auth/verify-otp`
-- **Description**: Verify OTP sent via email.
-- **Request Body**:
-    ```json
-    {
-      "email": "user@example.com",
-      "otp": "123456"
-    }
-    ```
-- **Response**:
-    ```json
-    {
-      "success": true,
-      "status_code": 200,
-      "message": "OTP verified successfully"
-    }
-    ```
+1. Fork repo
 
-## Folder Structure
+2. Create feature branch (git checkout -b feature/amazing-feature)
 
-```
-.
-├── config                # Configuration files (e.g., DB connection)
-├── middlewares           # Custom Express middlewares
-├── templates             # Templates for responses or emails
-├── utils                 # Utility functions (e.g., email sending, token generation)
-├── v1                    # Version 1 API folder
-│   ├── controllers       # Route controllers for handling requests
-│   ├── routes            # Express routes for the API
-│   ├── models            # Mongoose models (User, UserProfile, etc.)
-│   ├── services          # Business logic separated from controllers
-│   └── validators        # Validation logic for request data
-├── .env                  # Environment configuration
-├── gitignore              # Git ignore file
-├── app.js                # Main application file
-├── package-lock.json     # NPM lock file
-├── package.json          # NPM dependencies and scripts
-└── README.md             # Project documentation
-```
+3. Commit changes (git commit -m 'Add amazing feature')
 
-## License
+4. Push branch (git push origin feature/amazing-feature)
+
+5. Open PR 🎉
+
+## 📜 License
 
 This project is licensed under the MIT License.
 
----
-
-This version of the `README.md` correctly reflects the updated folder structure with environment files and configurations outside the `src` directory.
+🔥 EventHorizon Backend – Secure, Scalable, and Built for the Future.
