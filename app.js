@@ -14,6 +14,7 @@ import authRoutesV1 from './src/v1/routes/auth.routes.js';
 import eventRoutesV1 from './src/v1/routes/event.routes.js';
 import ticketRoutesV1 from './src/v1/routes/ticket.routes.js';
 import webhookRoutesV1 from './src/v1/routes/webhook.routes.js';
+import adminRoutesV1 from './src/v1/routes/admin.routes.js';
 
 dotenv.config();
 
@@ -42,7 +43,8 @@ app.use('/api/v1/auth', authRoutesV1);
 app.use('/api/v1/events', eventRoutesV1);
 app.use('/api/v1/tickets', ticketRoutesV1);
 app.use('/api/v1/webhook', webhookRoutesV1);
-// app.use("/api/v1/admin", adminRoutes);
+app.use('/api/v1/admin', adminRoutesV1);
+
 app.use(notFound);
 app.use(errorMiddleware);
 

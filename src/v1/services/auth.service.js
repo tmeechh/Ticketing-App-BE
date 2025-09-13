@@ -32,10 +32,20 @@ export async function findUserByIdOrEmail(identifier) {
 }
 
 export async function register(userData = {}) {
-  const { password } = userData;
+  const { password, roles } = userData;
   const hashedPassword = await hashPassword(password);
 
-  const roles = userData.roles ?? ['user'];
+    if (roles && roles.includes("admin")) {
+    throw ApiError.forbidden("You cannot register as admin");
+  }
+
+
+  const allowedRoles = ["user", "organizer"];
+  const assignedRoles = roles && allowedRoles.includes(roles[0])
+    ? roles
+    : ["user"];
+
+  // const roles = userData.roles ?? ['user'];
   const user = await User.create({
     ...userData,
     roles,
@@ -93,6 +103,8 @@ export async function login(userData = {}) {
   return ApiSuccess.ok('Login Successful', {
     user,
     token,
+    roles: user.roles,
+    isAdmin: user.roles.includes("admin"),
   });
 }
 

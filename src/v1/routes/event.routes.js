@@ -3,7 +3,7 @@
 import express from "express";
 import { createEvent, getEvents, getEventById, updateEvent, deleteEvent, getOrganizerEvents } from "../controllers/event.controllers.js";
 import { isAuth } from "../../middlewares/auth.js";
-import { onlyOrganizers } from "../../middlewares/authorie.js";
+import { onlyOrganizers } from "../../middlewares/authorize.js";
 import { uploadEventImages } from "../../middlewares/upload.middleware.js";  
 
 const router = express.Router();
