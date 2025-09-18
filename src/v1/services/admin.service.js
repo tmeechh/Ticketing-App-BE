@@ -18,7 +18,8 @@ export async function deleteUserService(userId) {
 
 // EVENTS
 export async function getAllEventsService() {
-  const events = await Event.find({});
+  const events = await Event.find({})
+    .populate("organizerId", "fullName email image roles"); // only useful fields
   return ApiSuccess.ok("All events fetched", { count: events.length, events });
 }
 
@@ -30,7 +31,9 @@ export async function deleteEventService(eventId) {
 
 // TICKETS
 export async function getAllTicketsService() {
-  const tickets = await Ticket.find({});
+  const tickets = await Ticket.find({})
+    .populate("event", "title date location") // event title/date/location only
+    .populate("user", "fullName email image"); // user details
   return ApiSuccess.ok("All tickets fetched", { count: tickets.length, tickets });
 }
 
@@ -39,6 +42,7 @@ export async function deleteTicketService(ticketId) {
   if (!ticket) throw ApiError.notFound("Ticket not found");
   return ApiSuccess.ok("Ticket deleted successfully");
 }
+
 
 export default {
   getAllUsersService,
