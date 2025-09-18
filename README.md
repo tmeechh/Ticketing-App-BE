@@ -11,7 +11,7 @@ It powers the frontend (React + Vite) and handles all core business logic secure
 
 - 👤 **User & Organizer Accounts**
   - User registration with email + password
-  - Role-based access (User / Organizer)
+  - Role-based access (User / Organizer / Admin)
   - OTP verification for security
 
 - 🔐 **Authentication**
