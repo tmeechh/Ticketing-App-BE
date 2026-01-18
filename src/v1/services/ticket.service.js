@@ -13,6 +13,11 @@ export async function purchaseTicket({ eventId, userId, ticketType, price, quant
   const event = await Event.findById(eventId);
   if (!event) throw ApiError.notFound(`Event with ID ${eventId} not found`);
 
+  // 🔹 Check if event is outdated
+  if (event.isOutdated) {
+    throw ApiError.badRequest("Cannot purchase tickets for past events");
+  }
+
   const validTypes = ["general", "vip", "premium", "free"];
   if (!validTypes.includes(ticketType)) {
     throw ApiError.badRequest("Invalid ticket type selected");
@@ -152,6 +157,3 @@ export default {
   getUserTickets,
   refundTicket,
 };
-
-
-

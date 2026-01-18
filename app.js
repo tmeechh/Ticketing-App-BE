@@ -52,17 +52,17 @@ connectDB(process.env.DB_URI).then(() => {
   console.log(`DB Connected!`);  
 })
 
- // const startServer = async () => {
-// //   try {
-// //     await connectDB(process.env.DB_URI);
-// //     console.log(`DB Connected!`);
-// //     app.listen(port, () => console.log(`Server is listening on PORT:${port}`));
-// //   } catch (error) {
-// //     console.log(`Couldn't connect because of ${error.message}`);
-// //     process.exit(1);
-// //   }
-// // };
+ const startServer = async () => {
+  try {
+    await connectDB(process.env.DB_URI);
+    console.log(`DB Connected!`);
+    app.listen(port, () => console.log(`Server is listening on PORT:${port}`));
+  } catch (error) {
+    console.log(`Couldn't connect because of ${error.message}`);
+    process.exit(1);
+  }
+};
 
-// startServer();
+startServer();
 
 export default app;  

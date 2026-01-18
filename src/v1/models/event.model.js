@@ -52,9 +52,22 @@ const EventSchema = new Schema(
         message: 'Tickets available must include General, VIP, and Premium',
       },
     },
+     isOutdated: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
+
+// 🔥 Automatically update isOutdated before saving
+EventSchema.pre('save', function(next) {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // Reset time to start of day for accurate comparison
+  
+  const eventDate = new Date(this.date);
+  eventDate.setHours(0, 0, 0, 0);
+  
+  this.isOutdated = eventDate < now;
+  next();
+});
 
 // 🔥 Add soldOut virtual
 EventSchema.virtual('soldOut').get(function () {

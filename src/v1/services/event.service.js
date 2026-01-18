@@ -101,10 +101,15 @@ export async function updateEvent(eventId, updateData, files) {
  * Get all events with optional filtering
  */
 export async function getEvents(filter = {}) {
-  const query = {};
+  const query = {isOutdated: false };
 
   if (filter.category) {
     query.category = filter.category;
+  }
+
+  // Allow fetching outdated events if explicitly requested
+  if (filter.includeOutdated === 'true') {
+    delete query.isOutdated;
   }
 
   const events = await Event.find(query);
