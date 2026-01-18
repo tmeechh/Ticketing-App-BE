@@ -9,28 +9,32 @@ It powers the frontend (React + Vite) and handles all core business logic secure
 
 ## ✨ Features
 
-- 👤 **User & Organizer Accounts**
+- 👤 **User Accounts**
   - User registration with email + password
-  - Role-based access (User / Organizer / Admin)
+  - Role-based access (User / Admin)
+  - Organizer role can be assigned manually by admins for future use
   - OTP verification for security
 
 - 🔐 **Authentication**
   - JWT-based login & protected routes
   - Password reset with OTP
-
+****
 - 🎟️ **Event Management**
   - Organizers can create, update, and manage events
   - Tickets with types (General, VIP, Premium)
+  - - Automatic event status tracking (isOutdated flag for past events)
   - Refund system (no refunds within 14 days of an event)
 
 - 💳 **Payments**
   - Paystack integration (test mode ready)
   - Payment verification
   - Support for ticket purchase transactions
+  -  Automatic prevention of ticket purchases for outdated events
 
 - ☁️ **Media Handling**
   - Multer for file uploads
   - Cloudinary for image storage (event banners, profile images)
+  - Support for multiple event images (up to 5 per event)
 
 - 📧 **Email & Notifications**
   - Nodemailer for sending OTPs
@@ -38,6 +42,7 @@ It powers the frontend (React + Vite) and handles all core business logic secure
 
 - 🕒 **Automations**
   - Node-cron for scheduled tasks (reminders, cleanups, etc.)
+  - Automatic event status updates based on event dates
 
 ---
 
